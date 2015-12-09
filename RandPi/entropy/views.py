@@ -5,7 +5,7 @@ from base64 import b64encode
 import json
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import modes, algorithms, Cipher
-from cryptography.hazmat.primitives import hashes, hmac
+from cryptography.hazmat.primitives import hashes, hmac, padding
 
 
 def index(request):
@@ -15,8 +15,11 @@ def index(request):
 def create_encrypted_response(data):
     backend = default_backend()
     cipher = Cipher(algorithms.AES(settings.ENCRYPTION_KEY), modes.CBC(settings.ENCRYPTION_IV), backend=backend)
+    padder = padding.PKCS7(128).padder()
+    padded_data = padder.update(data)
+    padded_data += padder.finalize()
     encryptor = cipher.encryptor()
-    encrypted_data = encryptor.update(data) + encryptor.finalize()
+    encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
     h = hmac.HMAC(settings.ENCRYPTION_KEY, hashes.SHA256(), backend=backend)
     h.update(encrypted_data)
     return HttpResponse(json.dumps({
