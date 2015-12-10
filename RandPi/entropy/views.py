@@ -12,6 +12,15 @@ def index(request):
     return HttpResponse("statistics")
 
 
+def get_available_entropy():
+    if os.path.isfile(os.path.join(os.sep, "proc", "sys", "kernel", "random", "entropy_avail")):
+        with open(os.path.join(os.sep, "proc", "sys", "kernel", "random", "entropy_avail"), 'r') as f:
+            entropy_avail = int(f.read())
+        return entropy_avail
+    else:
+        return -1
+
+
 def create_encrypted_response(data):
     backend = default_backend()
     cipher = Cipher(algorithms.AES(settings.ENCRYPTION_KEY), modes.CBC(settings.ENCRYPTION_IV), backend=backend)
