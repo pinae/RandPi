@@ -37,3 +37,28 @@ Use `pyvenv` to create a virtualenv: `pyvenv venv`
 Activate it with: `source venv/bin/activate`
 
 After that you can install all requirements at once with: `sudo pip install -r requirements.txt`
+
+UWsgi
+-----
+Install: `sudo apt-get install uwsgi uwsgi-plugin-python3`
+
+Create a configuration for the RandPi-app in `/etc/uwsgi/apps-available/RandPi.ini`:
+
+    [uwsgi]
+    vhost = true
+    gid = www-data
+    uid = www-data
+    plugins = python3
+    socket = /tmp/RandPi.sock
+    master = true
+    enable-threads = true
+    processes = 1
+    wsgi-file = /var/www/vhost/RandPi/RandPi/RandPi/wsgi.py
+    virtualenv = /var/www/vhost/RandPi/venv
+    chdir = /var/www/vhost/RandPi/RandPi
+    touch-reload = /var/www/vhost/RandPi/RandPi/reload
+    
+Do not forget to activate the app with a symlink: 
+`ln -s /etc/uwsgi/apps-available/RandPi.ini /etc/uwsgi/apps-enabled/RandPi.ini`
+
+Touch the reload file: `touch /var/www/vhost/RandPi/RandPi/reload`
