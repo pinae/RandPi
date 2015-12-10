@@ -42,7 +42,7 @@ def get_random(length=64):
     padded_data = decrypter.update(b64decode(data['encrypted_data'])) + decrypter.finalize()
     unpadder = padding.PKCS7(128).unpadder()
     data = unpadder.update(padded_data)
-    data + unpadder.finalize()
+    data += unpadder.finalize()
     return data
 
 if __name__ == "__main__":
