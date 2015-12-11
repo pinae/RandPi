@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-from hashlib import pbkdf2_hmac
+from Crypto.Hash import SHA384, HMAC
+from pbkdf2 import PBKDF2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +33,8 @@ SHARED_SECRET = "Mein tolles langes Passwort, das total sicher ist. " + \
                 "Das sieht man an den Sonderzeichen wie / (Slash) oder $ (Dollar). " + \
                 "Außerdem enthält diese Passphrase einfach eine Menge Zeichen, die ein Angreifer erst mal erraten muss."
 SHARED_SALT = "pepper"
-base_key = pbkdf2_hmac('sha384', SHARED_SECRET.encode('utf-8'), SHARED_SALT.encode('utf-8'), 32000)
+base_key = PBKDF2(SHARED_SECRET.encode('utf-8'), SHARED_SALT.encode('utf-8'),
+                  iterations=32000, digestmodule=SHA384, macmodule=HMAC).read(48)
 ENCRYPTION_KEY = base_key[:32]
 ENCRYPTION_IV = base_key[32:48]
 

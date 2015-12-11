@@ -3,7 +3,8 @@
 
 import requests
 from Crypto.Cipher import AES
-import hashlib
+from Crypto.Hash import SHA256, SHA384, HMAC
+from pbkdf2 import PBKDF2
 import hmac
 from base64 import b64decode
 import sys
@@ -11,9 +12,10 @@ import sys
 SHARED_SECRET = ("Mein tolles langes Passwort, das total sicher ist. " +
                  "Das sieht man an den Sonderzeichen wie / (Slash) oder $ (Dollar). " +
                  "Außerdem enthält diese Passphrase einfach eine Menge Zeichen, " +
-                 "die ein Angreifer erst mal erraten muss.").encode('utf-8')
-SHARED_SALT = "pepper".encode('utf-8')
-base_key = hashlib.pbkdf2_hmac('sha384', SHARED_SECRET, SHARED_SALT, 32000)
+                 "die ein Angreifer erst mal erraten muss.")
+SHARED_SALT = "pepper"
+base_key = PBKDF2(SHARED_SECRET.encode('utf-8'), SHARED_SALT.encode('utf-8'),
+                  iterations=32000, digestmodule=SHA384, macmodule=HMAC).read(48)
 ENCRYPTION_KEY = base_key[:32]
 ENCRYPTION_IV = base_key[32:48]
 
@@ -27,7 +29,7 @@ def get_random(length=64):
     data = request.json()
     if hmac.new(ENCRYPTION_KEY,
                 b64decode(data['encrypted_data']),
-                hashlib.sha256).digest() != b64decode(data['hmac']):
+                SHA256).digest() != b64decode(data['hmac']):
         print("Wrong signature!")
         exit(1)
     cipher = AES.new(ENCRYPTION_KEY, AES.MODE_CBC, ENCRYPTION_IV)

@@ -4,7 +4,7 @@ import os
 from base64 import b64encode
 import json
 from Crypto.Cipher import AES
-import hashlib
+from Crypto.Hash import SHA256
 import hmac
 
 
@@ -36,7 +36,7 @@ def add_pkcs7_padding(data):
 def create_encrypted_response(data):
     cipher = AES.new(settings.ENCRYPTION_KEY, AES.MODE_CBC, settings.ENCRYPTION_IV)
     encrypted_data = cipher.encrypt(add_pkcs7_padding(data))
-    signature = hmac.new(settings.ENCRYPTION_KEY, encrypted_data, hashlib.sha256).digest()
+    signature = hmac.new(settings.ENCRYPTION_KEY, encrypted_data, SHA256).digest()
     return HttpResponse(json.dumps({
         "encrypted_data": str(b64encode(encrypted_data), encoding='utf-8'),
         "hmac": str(b64encode(signature), encoding='utf-8')
