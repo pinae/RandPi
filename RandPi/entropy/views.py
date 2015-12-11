@@ -83,4 +83,20 @@ def random(request):
 
 
 def hwrandom(request):
-    return HttpResponse("hwrandom")
+    try:
+        length = int(request.GET.get('length', '64'))
+    except TypeError:
+        return HttpResponse(json.dumps({
+            "error": "Illegal length value."
+        }))
+    if length > 2048:
+        return HttpResponse(json.dumps({
+            "error": "A length above 2048 Bytes is not supported."
+        }))
+    if length < 1:
+        return HttpResponse(json.dumps({
+            "error": "Length is too small."
+        }))
+    with open(os.path.join(os.sep, 'dev', 'hwrng'), 'rb') as f:
+        data = f.read(length)
+    return create_encrypted_response(data)
