@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import hmac
+import sys
+from base64 import b64decode
+
 import requests
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256, SHA384, HMAC
-from pbkdf2 import PBKDF2
-import hmac
-from base64 import b64decode
-import sys
+from RandPi.helper.pbkdf2 import PBKDF2
 
 SHARED_SECRET = ("Mein tolles langes Passwort, das total sicher ist. " +
                  "Das sieht man an den Sonderzeichen wie / (Slash) oder $ (Dollar). " +

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 from Crypto.Hash import SHA384, HMAC
-from pbkdf2 import PBKDF2
+from helper.pbkdf2 import PBKDF2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'entropy',
+    'helper'
 ]
 
 MIDDLEWARE_CLASSES = [
