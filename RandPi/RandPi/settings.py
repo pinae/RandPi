@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from hashlib import pbkdf2_hmac
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,15 +32,7 @@ SHARED_SECRET = "Mein tolles langes Passwort, das total sicher ist. " + \
                 "Das sieht man an den Sonderzeichen wie / (Slash) oder $ (Dollar). " + \
                 "Außerdem enthält diese Passphrase einfach eine Menge Zeichen, die ein Angreifer erst mal erraten muss."
 SHARED_SALT = "pepper"
-backend = default_backend()
-pbkdf2 = PBKDF2HMAC(
-    algorithm=hashes.SHA384(),
-    length=48,
-    salt=SHARED_SALT.encode('utf-8'),
-    iterations=32000,
-    backend=backend
-)
-base_key = pbkdf2.derive(SHARED_SECRET.encode('utf-8'))
+base_key = pbkdf2_hmac('sha384', SHARED_SECRET.encode('utf-8'), SHARED_SALT.encode('utf-8'), 32000)
 ENCRYPTION_KEY = base_key[:32]
 ENCRYPTION_IV = base_key[32:48]
 

@@ -3,9 +3,9 @@ from django.http import HttpResponse
 import os
 from base64 import b64encode
 import json
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.ciphers import modes, algorithms, Cipher
-from cryptography.hazmat.primitives import hashes, hmac, padding
+from Crypto.Cipher import AES
+import hashlib
+import hmac
 
 
 def index(request):
@@ -21,19 +21,25 @@ def get_available_entropy():
         return -1
 
 
+def add_pkcs7_padding(data):
+        """
+        Adds PKCS7 padding so it can be divided into full blocks of 16 bytes.
+        :param bytes data: data without padding
+        :return: padded data
+        :rtype: bytes
+        """
+        length = 16 - (len(data) % 16)
+        data += bytes([length])*length
+        return data
+
+
 def create_encrypted_response(data):
-    backend = default_backend()
-    cipher = Cipher(algorithms.AES(settings.ENCRYPTION_KEY), modes.CBC(settings.ENCRYPTION_IV), backend=backend)
-    padder = padding.PKCS7(128).padder()
-    padded_data = padder.update(data)
-    padded_data += padder.finalize()
-    encryptor = cipher.encryptor()
-    encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
-    h = hmac.HMAC(settings.ENCRYPTION_KEY, hashes.SHA256(), backend=backend)
-    h.update(encrypted_data)
+    cipher = AES.new(settings.ENCRYPTION_KEY, AES.MODE_CBC, settings.ENCRYPTION_IV)
+    encrypted_data = cipher.encrypt(add_pkcs7_padding(data))
+    signature = hmac.new(settings.ENCRYPTION_KEY, encrypted_data, hashlib.sha256).digest()
     return HttpResponse(json.dumps({
         "encrypted_data": str(b64encode(encrypted_data), encoding='utf-8'),
-        "hmac": str(b64encode(h.finalize()), encoding='utf-8')
+        "hmac": str(b64encode(signature), encoding='utf-8')
     }))
 
 
