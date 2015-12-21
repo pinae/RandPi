@@ -97,6 +97,15 @@ def hwrandom(request):
         return HttpResponse(json.dumps({
             "error": "Length is too small."
         }))
-    with open(os.path.join(os.sep, 'dev', 'hwrng'), 'rb') as f:
-        data = f.read(length)
-    return create_encrypted_response(data)
+    if os.path.exists(os.path.join(os.sep, 'dev', 'hwrandom')):
+        with open(os.path.join(os.sep, 'dev', 'hwrandom'), 'rb') as device:
+            data = device.read(length)
+        return create_encrypted_response(data)
+    if os.path.exists(os.path.join(os.sep, 'dev', 'hwrng')):
+        with open(os.path.join(os.sep, 'dev', 'hwrng'), 'rb') as device:
+            data = device.read(length)
+        return create_encrypted_response(data)
+    else:
+        return HttpResponse(json.dumps({
+            "error": "No hardware random device found."
+        }))
