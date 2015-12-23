@@ -8,15 +8,20 @@ from Crypto.Hash import SHA256
 import hmac
 
 
-def index(request):
-    return HttpResponse("statistics")
-
-
 def get_available_entropy():
     if os.path.isfile(os.path.join(os.sep, "proc", "sys", "kernel", "random", "entropy_avail")):
         with open(os.path.join(os.sep, "proc", "sys", "kernel", "random", "entropy_avail"), 'r') as f:
             entropy_avail = int(f.read())
         return entropy_avail
+    else:
+        return -1
+
+
+def get_entropy_pool_size():
+    if os.path.isfile(os.path.join(os.sep, "proc", "sys", "kernel", "random", "poolsize")):
+        with open(os.path.join(os.sep, "proc", "sys", "kernel", "random", "poolsize"), 'r') as f:
+            poolsize = int(f.read())
+        return poolsize
     else:
         return -1
 
@@ -109,3 +114,14 @@ def hwrandom(request):
         return HttpResponse(json.dumps({
             "error": "No hardware random device found."
         }))
+
+
+def statistics(request):
+    return HttpResponse(json.dumps({
+        "pool_size": get_entropy_pool_size(),
+        "available": get_available_entropy()
+    }))
+
+
+def index(request):
+    return HttpResponse("statistics")
