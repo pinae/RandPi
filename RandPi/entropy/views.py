@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 import os
 from base64 import b64encode
 import json
@@ -124,4 +124,21 @@ def statistics(request):
 
 
 def index(request):
-    return HttpResponse("statistics")
+    return HttpResponse("""<!DOCTYPE html>
+    <html>
+      <head>
+        <script src="entropy/static/angular2.sfx.dev.js"></script>
+        <script src="entropy/static/main.js"></script>
+      </head>
+      <body>
+        <my-app></my-app>
+      </body>
+    </html>""")
+
+
+def static(request, filename):
+    if os.path.exists(os.path.join("static", filename)):
+        with open(os.path.join("static", filename), 'r') as f:
+            return HttpResponse(f.read())
+    else:
+        return HttpResponseNotFound('<h1>File not found</h1>')
