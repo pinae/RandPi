@@ -139,6 +139,6 @@ def index(request):
 def static(request, filename):
     if os.path.exists(os.path.join("entropy", "static", filename)):
         with open(os.path.join("entropy", "static", filename), 'r') as f:
-            return HttpResponse(f.read(), content_type='text/plain')
+            return HttpResponse(f.read(), content_type='application/javascript')
     else:
         raise Http404("The file " + filename + " was not found.")
