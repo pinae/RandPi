@@ -128,11 +128,11 @@ def index(request):
     <html>
       <head>
         <meta charset="UTF-8">
-        <script src="entropy/static/angular2-polyfills.min.js"></script>
-        <script src="entropy/static/Rx.umd.min.js"></script>
-        <script src="entropy/static/angular2-all.umd.min.js"></script>
-        <script src="entropy/static/app.component.js"></script>
-        <script src="entropy/static/boot.js"></script>
+        <script src="static/angular2-polyfills.min.js"></script>
+        <script src="static/Rx.umd.min.js"></script>
+        <script src="static/angular2-all.umd.min.js"></script>
+        <script src="static/app.component.js"></script>
+        <script src="static/boot.js"></script>
       </head>
       <body>
         <my-app>Loading ...</my-app>
