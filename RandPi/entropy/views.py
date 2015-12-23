@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, Http404
 import os
 from base64 import b64encode
 import json
@@ -139,6 +139,6 @@ def index(request):
 def static(request, filename):
     if os.path.exists(os.path.join("entropy", "static", filename)):
         with open(os.path.join("entropy", "static", filename), 'r') as f:
-            return HttpResponse(f.read(), content_type='application/javascript')
+            return HttpResponse(f.read(), content_type='text/plain')
     else:
-        return HttpResponseNotFound("<h1>File not found</h1>\n<p>The file " + filename + " was not found.")
+        raise Http404("The file " + filename + " was not found.")
