@@ -141,4 +141,4 @@ def static(request, filename):
         with open(os.path.join("static", filename), 'r') as f:
             return HttpResponse(f.read())
     else:
-        return HttpResponseNotFound('<h1>File not found</h1>')
+        return HttpResponseNotFound("<h1>File not found</h1>\n<p>The file " + filename + " was not found.")
