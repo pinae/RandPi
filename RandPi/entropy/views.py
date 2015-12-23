@@ -127,7 +127,7 @@ def index(request):
     return HttpResponse("""<!DOCTYPE html>
     <html>
       <head>
-        <script src="entropy/static/angular2.sfx.dev.js"></script>
+        <script src="entropy/static/angular2.min.js"></script>
         <script src="entropy/static/main.js"></script>
       </head>
       <body>
