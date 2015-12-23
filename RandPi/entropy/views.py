@@ -133,12 +133,12 @@ def index(request):
       <body>
         <my-app></my-app>
       </body>
-    </html>""")
+    </html>""", content_type='text/html')
 
 
 def static(request, filename):
     if os.path.exists(os.path.join("entropy", "static", filename)):
         with open(os.path.join("entropy", "static", filename), 'r') as f:
-            return HttpResponse(f.read())
+            return HttpResponse(f.read(), content_type='application/javascript')
     else:
         return HttpResponseNotFound("<h1>File not found</h1>\n<p>The file " + filename + " was not found.")
