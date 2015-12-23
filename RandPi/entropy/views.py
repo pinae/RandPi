@@ -137,8 +137,8 @@ def index(request):
 
 
 def static(request, filename):
-    if os.path.exists(os.path.join("static", filename)):
-        with open(os.path.join("static", filename), 'r') as f:
+    if os.path.exists(os.path.join("entropy", "static", filename)):
+        with open(os.path.join("entropy", "static", filename), 'r') as f:
             return HttpResponse(f.read())
     else:
-        return HttpResponseNotFound("<h1>File not found</h1>\n<p>The file " + os.path.abspath(os.path.join("static", filename)) + " was not found.")
+        return HttpResponseNotFound("<h1>File not found</h1>\n<p>The file " + filename + " was not found.")
