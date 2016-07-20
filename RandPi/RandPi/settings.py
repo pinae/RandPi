@@ -34,9 +34,9 @@ SHARED_SECRET = "Mein tolles langes Passwort, das total sicher ist. " + \
                 "Außerdem enthält diese Passphrase einfach eine Menge Zeichen, die ein Angreifer erst mal erraten muss."
 SHARED_SALT = "pepper"
 base_key = PBKDF2(SHARED_SECRET.encode('utf-8'), SHARED_SALT.encode('utf-8'),
-                  iterations=32000, digestmodule=SHA384, macmodule=HMAC).read(48)
+                  iterations=32000, digestmodule=SHA384, macmodule=HMAC).read(64)
 ENCRYPTION_KEY = base_key[:32]
-ENCRYPTION_IV = base_key[32:48]
+HMAC_KEY = base_key[32:64]
 
 # Application definition
 
