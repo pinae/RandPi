@@ -1,5 +1,5 @@
 # RandPi
-Entropy-As-A-Service Server for the raspberry pi. Uses Django 1.9.
+Entropy-As-A-Service Server for the raspberry pi. Uses Django.
 
 Usage
 =====
@@ -17,9 +17,9 @@ random because Linux whitens the inserted entropy.
 Installation
 ============
 
-You probably need `sudo apt-get install python3-dev libffi-dev`.
+You probably need `sudo apt install python3-dev libffi-dev`.
 
-On Raspbian `pyvenv` is missing. You can fix this by installing a new version of Python:
+On old Raspbian versions `pyvenv` is missing. You can fix this by installing a new version of Python:
 
     wget https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz
     tar xzf Python-3.5.1.tgz
@@ -33,8 +33,8 @@ Clone the git repository: `git clone https://github.com/pinae/RandPi.git`
 
 Enter the directory: `cd RandPi`
 
-Use `pyvenv` to create a virtualenv: `pyvenv venv`
-Activate it with: `source venv/bin/activate`
+Use `pyvenv` to create a virtualenv: `pyvenv env`
+Activate it with: `source env/bin/activate`
 
 After that you can install all requirements at once with: `sudo pip install -r requirements.txt`
 
@@ -54,7 +54,7 @@ Create a configuration for the RandPi-app in `/etc/uwsgi/apps-available/RandPi.i
     enable-threads = true
     processes = 1
     wsgi-file = /var/www/vhost/RandPi/RandPi/RandPi/wsgi.py
-    virtualenv = /var/www/vhost/RandPi/venv
+    virtualenv = /var/www/vhost/RandPi/env
     chdir = /var/www/vhost/RandPi/RandPi
     touch-reload = /var/www/vhost/RandPi/RandPi/reload
     
