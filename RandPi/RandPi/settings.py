@@ -27,7 +27,7 @@ SECRET_KEY = '!-6u8z&6m(-3cp0ceivxo_%(zg=lo51sgmt+z@5G/9s*w5y4fr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 SHARED_SECRET = "Mein tolles langes Passwort, das total sicher ist. " + \
                 "Das sieht man an den Sonderzeichen wie / (Slash) oder $ (Dollar). " + \
